@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import icon from "/icon.webp";
 import Footer from "./components/footer";
 
-const API_KEY = "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";
+const API_KEY = process.env.API_KEY;
 
 const App = () => {
   const [prompt, setPrompt] = useState("");
