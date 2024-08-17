@@ -223,6 +223,8 @@ const App = () => {
 
 export default App;
 
-//Github Secrets API_Key
 //Code Refactoring
+//Settings Cog
+//Settings: clear history, about
 //UI Overhaul
+//Update README
