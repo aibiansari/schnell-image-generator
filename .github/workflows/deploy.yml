@@ -16,13 +16,15 @@ jobs:
 
       - name: Setup Node
         uses: actions/setup-node@v3
+        with:
+          node-version: "20" # or your preferred Node.js version
 
       - name: Install dependencies
         uses: bahmutov/npm-install@v1
 
       - name: Build project
         env:
-          API_KEY: ${{ secrets.API_KEY }} # Access the secret here
+          VITE_API_KEY: ${{ secrets.VITE_API_KEY }} # Ensure this matches your Vite variable prefix
         run: npm run build
 
       - name: Upload production-ready build files
