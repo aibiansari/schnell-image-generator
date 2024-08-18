@@ -2,10 +2,6 @@
 # Schnell Image Generator
 
 Fast and intuitive image generator that brings your ideas to life in seconds, leveraging the power of Flux AI's advanced Schnell model. Whether you're a designer, content creator, or just someone looking to experiment with visual concepts, Schnell is here to help you generate high-quality images based on your creative prompts.
-## Authors
-
-- [@aibiansari](https://www.github.com/aibiansari)
-
 
 ## Tech Stack
 
@@ -27,3 +23,12 @@ Fast and intuitive image generator that brings your ideas to life in seconds, le
 - **Download & Save**: Save your generated images with filenames based on your prompt, making it easy to organize and find them later.
 - **Real-Time Notifications**: Get instant feedback with toast notifications on the status of your image generation.
 - **Cross-Platform Compatibility**: Built with web technologies to run smoothly across all major browsers.
+
+
+  ## Authors
+
+- [@aibiansari](https://www.github.com/aibiansari)
+
+  ## Acknowledgements
+
+- Special thanks to the developers of [Flux.1 AI Schnell](https://huggingface.co/black-forest-labs/FLUX.1-schnell) for their powerful image generation API. You can also check out their [GitHub repository](https://github.com/black-forest-labs/flux).
