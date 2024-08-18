@@ -14,7 +14,7 @@ const ImageContainer = ({ imageSrc }: { imageSrc: string | null }) => {
       }
       const link = document.createElement("a");
       link.href = imageSrc;
-      link.download = `${filename}.png`; // You can adjust the filename and extension if needed
+      link.download = `${filename}.png`;
       link.click();
     }
   };

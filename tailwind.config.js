@@ -5,6 +5,7 @@ export default {
     extend: {
       fontFamily: {
         Atkinson: ["Atkinson Hyperlegible", "sans-serif"],
+        Righteous: ["Righteous", "cursive"],
       },
     },
   },

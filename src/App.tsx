@@ -1,13 +1,15 @@
 import { useState, useRef, useEffect } from "react";
 import generateImage from "./api/schnell";
+import { RxCross2 } from "react-icons/rx";
+import { PiInfoBold } from "react-icons/pi";
 import icon from "/icon.webp";
-import Footer from "./components/footer";
-import ImageContainer from "./components/imgContainer";
+import Footer from "./components/ui/footer";
+import ImageContainer from "./components/ui/imgContainer";
 
 const App = () => {
   const [prompt, setPrompt] = useState("");
   const [imageSrc, setImageSrc] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false); // Loading state
+  const [isLoading, setIsLoading] = useState(false);
 
   const [history, setHistory] = useState<
     { prompt: string; imageUrl: string }[]
@@ -36,9 +38,9 @@ const App = () => {
 
   const handleGenerateImage = async () => {
     if (prompt.trim() === "") return; // Prevent generating an image with an empty prompt
-    setIsLoading(true); // Set loading state to true
+    setIsLoading(true);
     await generateImage({ prompt, setImageSrc, setPrompt, setHistory });
-    setIsLoading(false); // Set loading state to false after the image is generated
+    setIsLoading(false);
   };
 
   const handleHistoryClick = (item: { prompt: string; imageUrl: string }) => {
@@ -50,8 +52,8 @@ const App = () => {
     const updatedHistory = history.filter((_, i) => i !== index);
     setHistory(updatedHistory);
     if (imageSrc === history[index]?.imageUrl) {
-      setImageSrc(null); // Clear the displayed image if it was deleted
-      setPrompt(""); // Clear the prompt if the related image was deleted
+      setImageSrc(null);
+      setPrompt("");
     }
   };
 
@@ -63,16 +65,24 @@ const App = () => {
         style={{ scrollbarWidth: "none" }}
       >
         <div className="w-full">
-          <div className="flex items-center justify-between mb-4">
-            <img
-              src={icon}
-              alt="App Icon"
-              className="w-12 h-12 2xl:w-16 2xl:h-16 mb-4"
+          <div className="flex items-start justify-between mb-4">
+            <div className="flex items-start justify-center gap-2">
+              <img
+                src={icon}
+                alt="App Icon"
+                className="w-12 h-12 2xl:w-16 2xl:h-16 mb-4"
+              />
+              <h1 className="font-Righteous mt-1.5 text-3xl text-slate-950 cursor-default">
+                Schnell
+              </h1>
+            </div>
+            <PiInfoBold
+              size="2em"
+              className="mt-2 text-slate-950 hover:scale-105 cursor-pointer transition-transform duration-150 ease-in-out"
             />
-            <span>X</span>
           </div>
           <textarea
-            className="w-full text-md 2xl:text-lg min-h-28 max-h-44 text-black placeholder:text-neutral-600 bg-transparent outline-dashed outline-2 outline-neutral-600 focus:outline-black p-2 rounded mb-4"
+            className="w-full text-md 2xl:text-lg min-h-28 max-h-44 font-normal text-black placeholder:text-neutral-600 bg-transparent outline-dashed outline-2 outline-neutral-600 focus:outline-black p-2 rounded mb-4"
             placeholder="Enter your creative prompt..."
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
@@ -103,19 +113,18 @@ const App = () => {
           {history.length > 0 ? (
             <ul className="grid grid-cols-2 lg:grid-cols-4 gap-4">
               {history.map((item, index) => (
-                <li key={index} className="relative">
+                <li key={index} className="relative group">
                   <img
                     src={item.imageUrl}
                     alt={`Generated from prompt: ${item.prompt}`}
-                    className="cursor-pointer rounded-md shadow-md hover:opacity-75 transition-opacity"
+                    className="cursor-pointer rounded-md shadow-neutral-600 shadow-md hover:opacity-85 transition-opacity"
                     onClick={() => handleHistoryClick(item)}
                   />
-                  <button
-                    className="absolute bg-red-600 rounded-full top-1 right-1 text-white px-1 text-center text-sm font-bold"
+                  <RxCross2
+                    size="1.4em"
                     onClick={() => handleDeleteImage(index)}
-                  >
-                    ✕
-                  </button>
+                    className="absolute top-1.5 right-1.5 text-black bg-white rounded-full p-0.5 cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity"
+                  />
                 </li>
               ))}
             </ul>
@@ -132,7 +141,7 @@ const App = () => {
 
       {/* Mobile History */}
       <div className="block bg-gray-200 md:hidden mt-6 w-full">
-        <h2 className="text-2xl text-center font-bold mb-4">Gallery</h2>
+        <h2 className="text-2xl text-center font-bold my-4">Gallery</h2>
         {history.length > 0 ? (
           <ul className="grid grid-cols-2 gap-4 mx-8">
             {history.map((item, index) => (
@@ -140,15 +149,14 @@ const App = () => {
                 <img
                   src={item.imageUrl}
                   alt={`Generated from prompt: ${item.prompt}`}
-                  className="cursor-pointer rounded-md shadow-md hover:opacity-75 transition-opacity"
+                  className="cursor-pointer rounded-md shadow-neutral-600 shadow-md hover:opacity-85 transition-opacity"
                   onClick={() => handleHistoryClick(item)}
                 />
-                <button
-                  className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded-full text-xs"
+                <RxCross2
+                  size="1.4em"
                   onClick={() => handleDeleteImage(index)}
-                >
-                  ✕
-                </button>
+                  className="absolute top-1.5 right-1.5 text-black bg-white rounded-full p-0.5 cursor-pointer"
+                />
               </li>
             ))}
           </ul>
