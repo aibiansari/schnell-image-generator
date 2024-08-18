@@ -7,6 +7,7 @@ import ImageContainer from "./components/imgContainer";
 const App = () => {
   const [prompt, setPrompt] = useState("");
   const [imageSrc, setImageSrc] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false); // Loading state
 
   const [history, setHistory] = useState<
     { prompt: string; imageUrl: string }[]
@@ -18,11 +19,11 @@ const App = () => {
     return [];
   });
 
-  const generateButtonRef = useRef<HTMLButtonElement | null>(null);
-
   useEffect(() => {
     localStorage.setItem("imagesHistory", JSON.stringify(history));
   }, [history]);
+
+  const generateButtonRef = useRef<HTMLButtonElement | null>(null);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter") {
@@ -33,21 +34,45 @@ const App = () => {
     }
   };
 
-  const handleHistoryClick = (imageUrl: string) => {
-    setImageSrc(imageUrl);
+  const handleGenerateImage = async () => {
+    if (prompt.trim() === "") return; // Prevent generating an image with an empty prompt
+    setIsLoading(true); // Set loading state to true
+    await generateImage({ prompt, setImageSrc, setPrompt, setHistory });
+    setIsLoading(false); // Set loading state to false after the image is generated
+  };
+
+  const handleHistoryClick = (item: { prompt: string; imageUrl: string }) => {
+    setImageSrc(item.imageUrl);
+    setPrompt(item.prompt);
+  };
+
+  const handleDeleteImage = (index: number) => {
+    const updatedHistory = history.filter((_, i) => i !== index);
+    setHistory(updatedHistory);
+    if (imageSrc === history[index]?.imageUrl) {
+      setImageSrc(null); // Clear the displayed image if it was deleted
+      setPrompt(""); // Clear the prompt if the related image was deleted
+    }
   };
 
   return (
     <div className="h-screen bg-gray-200 flex flex-col md:flex-row">
       {/* Left Section: Text Generation */}
-      <div className="md:w-4/12 flex flex-col items-center bg-gradient-to-br from-blue-400 to-purple-600 m-4 md:m-8 p-8 rounded-lg shadow-neutral-400 shadow-md drop-shadow-md ">
+      <div
+        className="md:w-4/12 flex flex-col md:overflow-y-auto items-center bg-gradient-to-br from-blue-400 to-purple-600 m-4 md:m-8 p-8 rounded-lg shadow-neutral-400 shadow-md drop-shadow-md"
+        style={{ scrollbarWidth: "none" }}
+      >
         <div className="w-full">
-          <img src={icon} alt="App Icon" className="w-16 h-16 mx-auto mb-4" />
-          <h1 className="text-2xl text-white font-medium text-center mb-6">
-            Schnell Image Generator
-          </h1>
+          <div className="flex items-center justify-between mb-4">
+            <img
+              src={icon}
+              alt="App Icon"
+              className="w-12 h-12 2xl:w-16 2xl:h-16 mb-4"
+            />
+            <span>X</span>
+          </div>
           <textarea
-            className="w-full max-h-44 bg-transparent outline-dashed p-2 rounded mb-4"
+            className="w-full text-md 2xl:text-lg min-h-28 max-h-44 text-black placeholder:text-neutral-600 bg-transparent outline-dashed outline-2 outline-neutral-600 focus:outline-black p-2 rounded mb-4"
             placeholder="Enter your creative prompt..."
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
@@ -55,17 +80,20 @@ const App = () => {
           ></textarea>
           <button
             ref={generateButtonRef}
-            onClick={() =>
-              generateImage({ prompt, setImageSrc, setPrompt, setHistory })
-            }
-            className="bg-violet-900 text-white py-2 px-4 rounded w-full hover:bg-violet-950 transition"
+            onClick={handleGenerateImage}
+            className={`bg-violet-900 text-white text-md 2xl:text-lg py-2 px-4 rounded w-full transition ${
+              isLoading
+                ? "cursor-not-allowed opacity-50"
+                : "hover:bg-violet-950"
+            }`}
+            disabled={isLoading} // Disable button while loading
           >
-            Generate Image
+            {isLoading ? "Generating..." : "Generate Image"}
           </button>
         </div>
 
         {/* History Section */}
-        <h2 className="text-lg hidden md:block font-bold text-left mt-12 mb-3">
+        <h2 className="text-xl 2xl:text-2xl hidden md:block font-bold text-left mt-12 mb-4 2xl:mb-6">
           Gallery
         </h2>
         <div
@@ -73,19 +101,26 @@ const App = () => {
           style={{ scrollbarWidth: "none" }}
         >
           {history.length > 0 ? (
-            <ul>
+            <ul className="grid grid-cols-2 lg:grid-cols-4 gap-4">
               {history.map((item, index) => (
-                <li
-                  key={index}
-                  className="mb-3 bg-gray-100 p-2 rounded-md shadow-md shadow-neutral-300 pb-2 cursor-pointer hover:bg-gray-200 transition-colors duration-150 ease-in"
-                  onClick={() => handleHistoryClick(item.imageUrl)}
-                >
-                  {item.prompt}
+                <li key={index} className="relative">
+                  <img
+                    src={item.imageUrl}
+                    alt={`Generated from prompt: ${item.prompt}`}
+                    className="cursor-pointer rounded-md shadow-md hover:opacity-75 transition-opacity"
+                    onClick={() => handleHistoryClick(item)}
+                  />
+                  <button
+                    className="absolute bg-red-600 rounded-full top-1 right-1 text-white px-1 text-center text-sm font-bold"
+                    onClick={() => handleDeleteImage(index)}
+                  >
+                    ✕
+                  </button>
                 </li>
               ))}
             </ul>
           ) : (
-            <div className="text-gray-500 italic text-center">
+            <div className="text-gray-900 text-md 2xl:text-lg italic text-center">
               No images yet! Generate something cool to show here. 🚀
             </div>
           )}
@@ -97,16 +132,23 @@ const App = () => {
 
       {/* Mobile History */}
       <div className="block bg-gray-200 md:hidden mt-6 w-full">
-        <h2 className="text-xl text-center font-bold mb-3">Gallery</h2>
+        <h2 className="text-2xl text-center font-bold mb-4">Gallery</h2>
         {history.length > 0 ? (
-          <ul>
+          <ul className="grid grid-cols-2 gap-4 mx-8">
             {history.map((item, index) => (
-              <li
-                key={index}
-                className="mb-3 mx-8 text-center bg-gray-100 p-2 rounded-md shadow-md shadow-neutral-300 pb-2 cursor-pointer hover:bg-indigo-200 transition-colors duration-150 ease-in"
-                onClick={() => handleHistoryClick(item.imageUrl)}
-              >
-                {item.prompt}
+              <li key={index} className="relative">
+                <img
+                  src={item.imageUrl}
+                  alt={`Generated from prompt: ${item.prompt}`}
+                  className="cursor-pointer rounded-md shadow-md hover:opacity-75 transition-opacity"
+                  onClick={() => handleHistoryClick(item)}
+                />
+                <button
+                  className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded-full text-xs"
+                  onClick={() => handleDeleteImage(index)}
+                >
+                  ✕
+                </button>
               </li>
             ))}
           </ul>
@@ -126,7 +168,4 @@ export default App;
 
 //Settings Cog
 //Settings: clear history, about
-//History text to images overhaul
-//UI Overhaul
-//Responsive for 2k and 4k
 //Update README
