@@ -89,6 +89,7 @@ const App = () => {
 
   const handleShowAlert = () => {
     setShowAlert(!showAlert);
+    setCheckbox(false);
   };
 
   const handleClearHistory = () => {
@@ -181,7 +182,8 @@ const App = () => {
                             </p>
                             <div className="flex items-center justify-start gap-1.5">
                               <Checkbox
-                                onCheckedChange={() => setCheckbox(true)}
+                                checked={checkbox}
+                                onCheckedChange={() => setCheckbox(!checkbox)}
                               />
                               <label className="text-black -translate-y-[1px]">
                                 Don't show this again
@@ -254,7 +256,8 @@ const App = () => {
                           </p>
                           <div className="flex items-center justify-start gap-1.5">
                             <Checkbox
-                              onCheckedChange={() => setCheckbox(true)}
+                              checked={checkbox}
+                              onCheckedChange={() => setCheckbox(!checkbox)}
                             />
                             <label className="text-black -translate-y-[1px]">
                               Don't show this again
@@ -295,7 +298,3 @@ const App = () => {
 };
 
 export default App;
-
-//Settings Cog
-//Settings: clear history, about
-//Update README
