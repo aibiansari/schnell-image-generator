@@ -20,7 +20,7 @@ const ImageContainer = ({ imageSrc }: { imageSrc: string | null }) => {
   };
 
   return (
-    <div className="relative flex-1 flex aspect-square p-4 md:p-8 justify-center items-center">
+    <div className="relative flex-1 flex aspect-square p-4 md:px-8 md:pt-6 md:pb-8 justify-center items-center">
       {imageSrc ? (
         <>
           <img

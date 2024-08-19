@@ -1,15 +1,34 @@
 import { useState, useRef, useEffect } from "react";
 import generateImage from "./api/schnell";
 import { RxCross2 } from "react-icons/rx";
-import { PiInfoBold } from "react-icons/pi";
 import icon from "/icon.webp";
 import Footer from "./components/ui/footer";
 import ImageContainer from "./components/ui/imgContainer";
+
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+
+import { Checkbox } from "@/components/ui/checkbox";
+import About from "./components/ui/about";
 
 const App = () => {
   const [prompt, setPrompt] = useState("");
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [showAlert, setShowAlert] = useState(() => {
+    const storedShowAlert = localStorage.getItem("showAlert");
+    return storedShowAlert !== null ? JSON.parse(storedShowAlert) : true;
+  });
+  const [checkbox, setCheckbox] = useState(false);
 
   const [history, setHistory] = useState<
     { prompt: string; imageUrl: string }[]
@@ -24,6 +43,10 @@ const App = () => {
   useEffect(() => {
     localStorage.setItem("imagesHistory", JSON.stringify(history));
   }, [history]);
+
+  useEffect(() => {
+    localStorage.setItem("showAlert", JSON.stringify(showAlert));
+  }, [showAlert]);
 
   const generateButtonRef = useRef<HTMLButtonElement | null>(null);
 
@@ -57,11 +80,28 @@ const App = () => {
     }
   };
 
+  const handleDeleteImageAlert = (index: number) => {
+    if (checkbox) {
+      setShowAlert(false);
+    }
+    handleDeleteImage(index);
+  };
+
+  const handleShowAlert = () => {
+    setShowAlert(!showAlert);
+  };
+
+  const handleClearHistory = () => {
+    setHistory([]);
+    setImageSrc(null);
+    setPrompt("");
+  };
+
   return (
     <div className="h-screen bg-gray-200 flex flex-col md:flex-row">
       {/* Left Section: Text Generation */}
       <div
-        className="md:w-4/12 flex flex-col md:overflow-y-auto items-center bg-gradient-to-br from-blue-400 to-purple-600 m-4 md:m-8 p-8 rounded-lg shadow-neutral-400 shadow-md drop-shadow-md"
+        className="md:w-4/12 flex flex-col md:overflow-y-auto items-center bg-gradient-to-br from-blue-400 to-purple-600 m-4 md:mx-8 md:mt-6 md:mb-8 p-8 rounded-lg shadow-neutral-400 shadow-md drop-shadow-md"
         style={{ scrollbarWidth: "none" }}
       >
         <div className="w-full">
@@ -76,9 +116,10 @@ const App = () => {
                 Schnell
               </h1>
             </div>
-            <PiInfoBold
-              size="2em"
-              className="mt-2 text-slate-950 hover:scale-105 cursor-pointer transition-transform duration-150 ease-in-out"
+            <About
+              showAlert={showAlert}
+              onHandleShowAlert={handleShowAlert}
+              onHandleClearHistory={handleClearHistory}
             />
           </div>
           <textarea
@@ -107,7 +148,7 @@ const App = () => {
           Gallery
         </h2>
         <div
-          className="hidden md:block w-full flex-1 overflow-y-auto"
+          className="hidden md:block w-full flex-1 shadow-inner p-2 overflow-y-auto"
           style={{ scrollbarWidth: "none" }}
         >
           {history.length > 0 ? (
@@ -120,11 +161,51 @@ const App = () => {
                     className="cursor-pointer rounded-md shadow-neutral-600 shadow-md hover:opacity-85 transition-opacity"
                     onClick={() => handleHistoryClick(item)}
                   />
-                  <RxCross2
-                    size="1.4em"
-                    onClick={() => handleDeleteImage(index)}
-                    className="absolute top-1.5 right-1.5 text-black bg-white rounded-full p-0.5 cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity"
-                  />
+                  {showAlert ? (
+                    <AlertDialog>
+                      <AlertDialogTrigger>
+                        <RxCross2
+                          size="1.4em"
+                          className="absolute top-1.5 right-1.5 text-black bg-white rounded-full p-0.5 cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity"
+                        />
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>
+                            Are you absolutely sure?
+                          </AlertDialogTitle>
+                          <AlertDialogDescription className="flex flex-col gap-5">
+                            <p>
+                              This action cannot be undone. This will
+                              permanently delete your image from gallery.
+                            </p>
+                            <div className="flex items-center justify-start gap-1.5">
+                              <Checkbox
+                                onCheckedChange={() => setCheckbox(true)}
+                              />
+                              <label className="text-black -translate-y-[1px]">
+                                Don't show this again
+                              </label>
+                            </div>
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Nah, go back</AlertDialogCancel>
+                          <AlertDialogAction
+                            onClick={() => handleDeleteImageAlert(index)}
+                          >
+                            Delete it!
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  ) : (
+                    <RxCross2
+                      size="1.4em"
+                      onClick={() => handleDeleteImage(index)}
+                      className="absolute top-1.5 right-1.5 text-black bg-white rounded-full p-0.5 cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity"
+                    />
+                  )}
                 </li>
               ))}
             </ul>
@@ -152,11 +233,52 @@ const App = () => {
                   className="cursor-pointer rounded-md shadow-neutral-600 shadow-md hover:opacity-85 transition-opacity"
                   onClick={() => handleHistoryClick(item)}
                 />
-                <RxCross2
-                  size="1.4em"
-                  onClick={() => handleDeleteImage(index)}
-                  className="absolute top-1.5 right-1.5 text-black bg-white rounded-full p-0.5 cursor-pointer"
-                />
+
+                {showAlert ? (
+                  <AlertDialog>
+                    <AlertDialogTrigger>
+                      <RxCross2
+                        size="1.4em"
+                        className="absolute top-1.5 right-1.5 text-black bg-white rounded-full p-0.5 cursor-pointer"
+                      />
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>
+                          Are you absolutely sure?
+                        </AlertDialogTitle>
+                        <AlertDialogDescription className="flex flex-col gap-5">
+                          <p>
+                            This action cannot be undone. This will permanently
+                            delete your image from gallery.
+                          </p>
+                          <div className="flex items-center justify-start gap-1.5">
+                            <Checkbox
+                              onCheckedChange={() => setCheckbox(true)}
+                            />
+                            <label className="text-black -translate-y-[1px]">
+                              Don't show this again
+                            </label>
+                          </div>
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Nah, go back</AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={() => handleDeleteImageAlert(index)}
+                        >
+                          Delete it!
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                ) : (
+                  <RxCross2
+                    size="1.4em"
+                    onClick={() => handleDeleteImage(index)}
+                    className="absolute top-1.5 right-1.5 text-black bg-white rounded-full p-0.5 cursor-pointer"
+                  />
+                )}
               </li>
             ))}
           </ul>
