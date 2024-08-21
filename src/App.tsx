@@ -3,6 +3,7 @@ import generateImage from "./api/schnell";
 import { RxCross2 } from "react-icons/rx";
 import { ImSpinner9 } from "react-icons/im";
 import icon from "/icon.webp";
+import { toast } from "sonner";
 import Footer from "./components/ui/footer";
 import ImageContainer from "./components/ui/imgContainer";
 import getRandomPhrase from "./utils/loadingPhrases";
@@ -45,7 +46,17 @@ const App = () => {
   });
 
   useEffect(() => {
-    localStorage.setItem("imagesHistory", JSON.stringify(history));
+    try {
+      localStorage.setItem("imagesHistory", JSON.stringify(history));
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      if (error.message.includes("exceeded the quota")) {
+        toast.error(
+          "Local Storage is full. Clear some space to save more images."
+        );
+      }
+      console.error("Error saving to localStorage: ", error);
+    }
   }, [history]);
 
   useEffect(() => {
