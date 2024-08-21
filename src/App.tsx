@@ -174,10 +174,10 @@ const App = () => {
                   />
                   {showAlert ? (
                     <AlertDialog>
-                      <AlertDialogTrigger>
+                      <AlertDialogTrigger className="absolute top-1.5 right-1.5">
                         <RxCross2
                           size="1.4em"
-                          className="absolute top-1.5 right-1.5 text-black bg-white rounded-full p-0.5 cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity"
+                          className="text-black bg-white rounded-full p-0.5 cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity"
                         />
                       </AlertDialogTrigger>
                       <AlertDialogContent>
@@ -248,10 +248,10 @@ const App = () => {
 
                 {showAlert ? (
                   <AlertDialog>
-                    <AlertDialogTrigger>
+                    <AlertDialogTrigger className="absolute top-1.5 right-1.5">
                       <RxCross2
                         size="1.4em"
-                        className="absolute top-1.5 right-1.5 text-black bg-white rounded-full p-0.5 cursor-pointer"
+                        className="text-black bg-white rounded-full p-0.5 cursor-pointer"
                       />
                     </AlertDialogTrigger>
                     <AlertDialogContent>
