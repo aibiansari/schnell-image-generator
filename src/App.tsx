@@ -1,9 +1,11 @@
 import { useState, useRef, useEffect } from "react";
 import generateImage from "./api/schnell";
 import { RxCross2 } from "react-icons/rx";
+import { ImSpinner9 } from "react-icons/im";
 import icon from "/icon.webp";
 import Footer from "./components/ui/footer";
 import ImageContainer from "./components/ui/imgContainer";
+import getRandomPhrase from "./utils/loadingPhrases";
 
 import {
   AlertDialog,
@@ -21,6 +23,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import About from "./components/ui/about";
 
 const App = () => {
+  const generateButtonRef = useRef<HTMLButtonElement | null>(null);
+  const [loadingPhrase, setLoadingPhrase] = useState("Generating Image...");
   const [prompt, setPrompt] = useState("");
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -48,8 +52,6 @@ const App = () => {
     localStorage.setItem("showAlert", JSON.stringify(showAlert));
   }, [showAlert]);
 
-  const generateButtonRef = useRef<HTMLButtonElement | null>(null);
-
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter") {
       e.preventDefault();
@@ -62,6 +64,7 @@ const App = () => {
   const handleGenerateImage = async () => {
     if (prompt.trim() === "") return; // Prevent generating an image with an empty prompt
     setIsLoading(true);
+    setLoadingPhrase(getRandomPhrase);
     await generateImage({ prompt, setImageSrc, setPrompt, setHistory });
     setIsLoading(false);
   };
@@ -140,7 +143,14 @@ const App = () => {
             }`}
             disabled={isLoading} // Disable button while loading
           >
-            {isLoading ? "Generating..." : "Generate Image"}
+            {isLoading ? (
+              <div className="flex items-center justify-center gap-2.5">
+                <ImSpinner9 className="animate-spin" />
+                {loadingPhrase}
+              </div>
+            ) : (
+              "Generate Image"
+            )}
           </button>
         </div>
 

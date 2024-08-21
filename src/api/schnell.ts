@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import blobToBase64 from "../utils/imgConverter";
-import { toast } from "sonner";
 import { Dispatch, SetStateAction } from "react";
+import { toast } from "sonner";
 
 //Changing API Key requires Development Server Restart
 const API_KEY = import.meta.env.VITE_API_KEY;
@@ -40,8 +40,6 @@ const generateImage = async ({
   setPrompt,
   setHistory,
 }: GenerateImageParams) => {
-  const toastId = toast.loading("Generating Image, Please wait...");
-
   try {
     const result = await query({
       inputs: prompt,
@@ -54,12 +52,9 @@ const generateImage = async ({
       { prompt, imageUrl: base64Image },
       ...prevHistory,
     ]);
-    toast.success("Image generated successfully!");
   } catch (err: any) {
     toast.error("Failed to generate image.");
     console.error(err.message);
-  } finally {
-    toast.dismiss(toastId);
   }
 };
 

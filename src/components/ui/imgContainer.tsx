@@ -23,13 +23,27 @@ const ImageContainer = ({ imageSrc }: { imageSrc: string | null }) => {
     <div className="relative flex-1 flex aspect-square p-4 md:px-8 md:pt-6 md:pb-8 justify-center items-center">
       {imageSrc ? (
         <>
+          <div className="md:hidden flex flex-col gap-8 items-center justify-center ">
+            <img
+              src={imageSrc}
+              alt="Generated"
+              className="rounded-lg shadow-neutral-400 shadow-md drop-shadow-md max-w-full max-h-full object-contain"
+              onError={() => toast.error("Failed to load image.")}
+            />
+            <button
+              onClick={downloadImage}
+              className="block md:hidden w-full p-2 rounded-md shadow-neutral-400 shadow-md drop-shadow-md text-white bg-violet-900 hover:bg-violet-950"
+            >
+              Download
+            </button>
+          </div>
           <img
             src={imageSrc}
             alt="Generated"
-            className="rounded-lg shadow-neutral-400 shadow-md drop-shadow-md max-w-full max-h-full object-contain"
+            className="hidden md:block rounded-lg shadow-neutral-400 shadow-md drop-shadow-md max-w-full max-h-full object-contain"
             onError={() => toast.error("Failed to load image.")}
           />
-          <div className="absolute bottom-12 flex gap-4 items-center justify-center">
+          <div className="absolute bottom-12 hidden md:flex gap-4 items-center justify-center">
             <button
               onClick={downloadImage}
               className="bg-slate-200 text-green-600 p-3 rounded-full shadow-neutral-800 shadow-lg transition-all ease-linear hover:-translate-y-1"
