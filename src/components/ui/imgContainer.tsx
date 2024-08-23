@@ -53,8 +53,8 @@ const ImageContainer = ({ imageSrc }: { imageSrc: string | null }) => {
           </div>
         </>
       ) : (
-        <div className="flex items-center justify-center p-32 md:p-56 border-2 border-dashed border-gray-400 rounded-lg bg-gray-200">
-          <span className="text-gray-500 text-xl 2xl:text-2xl">
+        <div className="flex items-center justify-center p-32 md:p-56 border-2 2xl:border-4 border-dashed border-gray-400 rounded-lg bg-gray-200">
+          <span className="text-gray-500 text-xl 2xl:text-3xl">
             Empty canvas... 🖼️
           </span>
         </div>

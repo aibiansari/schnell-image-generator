@@ -127,7 +127,7 @@ const App = () => {
                 alt="App Icon"
                 className="w-12 h-12 2xl:w-16 2xl:h-16 mb-4"
               />
-              <h1 className="font-Righteous mt-1.5 text-3xl text-slate-950 cursor-default">
+              <h1 className="font-Righteous mt-1.5 2xl:mt-3 text-3xl 2xl:text-4xl text-slate-950 cursor-default">
                 Schnell
               </h1>
             </div>
@@ -138,7 +138,7 @@ const App = () => {
             />
           </div>
           <textarea
-            className="w-full text-md 2xl:text-lg min-h-28 max-h-44 font-normal text-black placeholder:text-neutral-600 bg-transparent outline-dashed outline-2 outline-neutral-600 focus:outline-black p-2 rounded mb-4"
+            className="w-full text-md 2xl:text-lg min-h-28 2xl:min-h-44 2xl:max-h-80 max-h-44 font-normal text-black placeholder:text-neutral-600 bg-transparent outline-dashed outline-2 outline-neutral-600 focus:outline-black p-2 rounded mb-4"
             placeholder="Enter your creative prompt..."
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
@@ -147,7 +147,7 @@ const App = () => {
           <button
             ref={generateButtonRef}
             onClick={handleGenerateImage}
-            className={`bg-violet-900 text-white text-md 2xl:text-lg py-2 px-4 rounded w-full transition ${
+            className={`bg-violet-900 text-white text-md 2xl:text-xl py-2 px-4 rounded w-full transition ${
               isLoading
                 ? "cursor-not-allowed opacity-50"
                 : "hover:bg-violet-950"

@@ -33,10 +33,7 @@ const About = ({ showAlert, onHandleShowAlert, onHandleClearHistory }: any) => {
   return (
     <Dialog>
       <DialogTrigger>
-        <PiInfoBold
-          size="2em"
-          className="mt-2 text-slate-950 hover:scale-105 cursor-pointer transition-transform duration-150 ease-in-out"
-        />
+        <PiInfoBold className="mt-2 size-8 2xl:size-10 text-slate-950 hover:scale-105 cursor-pointer transition-transform duration-150 ease-in-out" />
       </DialogTrigger>
       <DialogContent className="flex flex-col max-h-screen md:max-h-[calc(100vh-2rem)] overflow-hidden">
         <DialogHeader
