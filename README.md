@@ -24,10 +24,13 @@ Fast and intuitive image generator that brings your ideas to life in seconds, le
 - **Real-Time Notifications**: Get instant feedback with toast notifications on the status of your image generation.
 - **Cross-Platform Compatibility**: Built with web technologies to run smoothly across all major browsers.
 
-
   ## Authors
 
 - [@aibiansari](https://www.github.com/aibiansari)
+
+## License
+
+Schnell is an open-source project, and it's free for anyone to use. If you have ideas, want to fix a bug, or add new features, feel free to open an issue or submit a pull request.
 
   ## Acknowledgements
 
