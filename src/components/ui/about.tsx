@@ -135,20 +135,20 @@ const About = ({ showAlert, onHandleShowAlert, onHandleClearHistory }: any) => {
             </section>
 
             <section className="w-full max-w-xl mx-auto p-6 mt-4 bg-white rounded-lg shadow-inner">
-              <div className="flex items-center space-x-6">
+              <div className="flex flex-col md:flex-row items-center gap-4">
                 <img
                   src={avatar}
                   alt="Abdullah Ansari"
                   className="w-24 h-24 rounded-full shadow-black/40 shadow-md"
                 />
-                <div className="-translate-y-1">
-                  <h2 className="text-2xl md:text-3xl text-left font-semibold">
+                <div className="-translate-y-1 flex flex-col items-center md:items-start">
+                  <h2 className="text-3xl text-left font-semibold">
                     Abdullah Ansari
                   </h2>
                   <p className="text-gray-600 text-left">
                     Web Developer & Designer
                   </p>
-                  <div className="flex space-x-4 mt-2">
+                  <div className="flex space-x-4 mt-4 md:mt-2">
                     <a
                       href="https://github.com/aibiansari"
                       target="_blank"
