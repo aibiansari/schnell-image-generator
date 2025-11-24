@@ -3,8 +3,8 @@ import blobToBase64 from "../utils/imgConverter";
 import { Dispatch, SetStateAction } from "react";
 import { toast } from "sonner";
 
-//Changing the API Key requires Development Server Restart
-const API_KEY = "import.meta.env.VITE_API_KEY";
+//Changing API Key requires Development Server Restart
+const API_KEY = import.meta.env.VITE_API_KEY;
 
 const query = async (data: any) => {
   const response = await fetch(
